@@ -126,7 +126,7 @@ fn we_can_prove_and_get_the_correct_result_from_a_basic_projection() {
         bigint("a", [1_i64, 4_i64, 5_i64, 2_i64, 5_i64, 1, 4, 5, 2, 5]),
         bigint("b", [1_i64, 2, 3, 4, 5, 1, 2, 3, 4, 5]),
     ]);
-    let t = "sxt.t".parse().unwrap();
+    let t = "PLACEHOLDER_SCHEMA.PLACEHOLDER_TABLE".parse().unwrap();
     let mut accessor = OwnedTableTestAccessor::<InnerProductProof>::new_empty_with_setup(());
     accessor.add_table(t, data, 0);
     let ast = projection(
@@ -152,7 +152,7 @@ fn we_can_prove_and_get_the_correct_result_from_a_nontrivial_projection() {
         bigint("a", [1_i64, 4_i64, 5_i64, 2_i64, 5_i64]),
         bigint("b", [1_i64, 2, 3, 4, 5]),
     ]);
-    let t = "sxt.t".parse().unwrap();
+    let t = "PLACEHOLDER_SCHEMA.PLACEHOLDER_TABLE".parse().unwrap();
     let mut accessor = OwnedTableTestAccessor::<InnerProductProof>::new_empty_with_setup(());
     accessor.add_table(t, data, 0);
     let ast = projection(
@@ -187,7 +187,7 @@ fn we_can_prove_and_get_the_correct_result_from_a_composed_projection() {
         bigint("a", [1_i64, 4_i64, 5_i64, 2_i64, 5_i64]),
         bigint("b", [1_i64, 2, 3, 4, 5]),
     ]);
-    let t = "sxt.t".parse().unwrap();
+    let t = "PLACEHOLDER_SCHEMA.PLACEHOLDER_TABLE".parse().unwrap();
     let mut accessor = OwnedTableTestAccessor::<InnerProductProof>::new_empty_with_setup(());
     accessor.add_table(t, data, 0);
     let ast = projection(
@@ -227,7 +227,7 @@ fn we_can_get_an_empty_result_from_a_basic_projection_on_an_empty_table_using_re
         borrowed_varchar("d", [""; 0], &alloc),
         borrowed_scalar("e", [0; 0], &alloc),
     ]);
-    let t = "sxt.t".parse().unwrap();
+    let t = "PLACEHOLDER_SCHEMA.PLACEHOLDER_TABLE".parse().unwrap();
     let table_map = indexmap! {
         t => data.clone()
     };
@@ -279,7 +279,7 @@ fn we_can_get_no_columns_from_a_basic_projection_with_no_selected_columns_using_
         borrowed_varchar("d", ["1", "2", "3", "4", "5"], &alloc),
         borrowed_scalar("e", [1, 2, 3, 4, 5], &alloc),
     ]);
-    let t = "sxt.t".parse().unwrap();
+    let t = "PLACEHOLDER_SCHEMA.PLACEHOLDER_TABLE".parse().unwrap();
     let table_map = indexmap! {
         t => data.clone()
     };
@@ -317,7 +317,7 @@ fn we_can_get_the_correct_result_from_a_basic_projection_using_result_evaluate()
         borrowed_varchar("d", ["1", "2", "3", "4", "5"], &alloc),
         borrowed_scalar("e", [1, 2, 3, 4, 5], &alloc),
     ]);
-    let t = "sxt.t".parse().unwrap();
+    let t = "PLACEHOLDER_SCHEMA.PLACEHOLDER_TABLE".parse().unwrap();
     let table_map = indexmap! {
         t => data.clone()
     };
@@ -375,7 +375,7 @@ fn we_can_prove_a_projection_on_an_empty_table() {
         varchar("d", ["3"; 0]),
         scalar("e", [3; 0]),
     ]);
-    let t = "sxt.t".parse().unwrap();
+    let t = "PLACEHOLDER_SCHEMA.PLACEHOLDER_TABLE".parse().unwrap();
     let mut accessor = OwnedTableTestAccessor::<InnerProductProof>::new_empty_with_setup(());
     accessor.add_table(t, data, 0);
     let expr = projection(
@@ -420,7 +420,7 @@ fn we_can_prove_a_projection() {
         varchar("d", ["1", "2", "3", "4", "5"]),
         scalar("e", [1, 2, 3, 4, 5]),
     ]);
-    let t = "sxt.t".parse().unwrap();
+    let t = "PLACEHOLDER_SCHEMA.PLACEHOLDER_TABLE".parse().unwrap();
     let mut accessor = OwnedTableTestAccessor::<InnerProductProof>::new_empty_with_setup(());
     accessor.add_table(t, data, 0);
     let expr = projection(

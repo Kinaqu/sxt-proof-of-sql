@@ -13,7 +13,7 @@ use crate::{
 #[test]
 fn we_can_prove_a_query_with_a_single_selected_row() {
     let data = owned_table([boolean("a", [true, false])]);
-    let t = "sxt.t".parse().unwrap();
+    let t = "PLACEHOLDER_SCHEMA.PLACEHOLDER_TABLE".parse().unwrap();
     let accessor = OwnedTableTestAccessor::<InnerProductProof>::new_from_table(t, data, 0, ());
     let ast = projection(
         cols_expr_plan(t, &["a"], &accessor),
