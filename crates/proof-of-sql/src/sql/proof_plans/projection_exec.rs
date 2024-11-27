@@ -87,11 +87,7 @@ impl ProofPlan for ProjectionExec {
     }
 
     fn get_column_references(&self) -> IndexSet<ColumnRef> {
-        let mut columns = self.input.get_column_references();
-        self.aliased_results.iter().for_each(|aliased_expr| {
-            aliased_expr.expr.get_column_references(&mut columns);
-        });
-        columns
+        self.input.get_column_references()
     }
 
     fn get_table_references(&self) -> IndexSet<TableRef> {

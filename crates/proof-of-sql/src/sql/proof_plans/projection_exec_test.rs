@@ -14,7 +14,7 @@ use crate::{
             exercise_verification, ProofPlan, ProvableQueryResult, ProverEvaluate,
             VerifiableQueryResult,
         },
-        proof_exprs::{test_utility::*, ColumnExpr, DynProofExpr},
+        proof_exprs::{test_utility::*, AliasedDynProofExpr, ColumnExpr, DynProofExpr},
         proof_plans::TableExec,
     },
 };
@@ -126,11 +126,17 @@ fn we_can_prove_and_get_the_correct_result_from_a_basic_projection() {
         bigint("a", [1_i64, 4_i64, 5_i64, 2_i64, 5_i64, 1, 4, 5, 2, 5]),
         bigint("b", [1_i64, 2, 3, 4, 5, 1, 2, 3, 4, 5]),
     ]);
-    let t = "PLACEHOLDER_SCHEMA.PLACEHOLDER_TABLE".parse().unwrap();
-    let mut accessor = OwnedTableTestAccessor::<InnerProductProof>::new_empty_with_setup(());
-    accessor.add_table(t, data, 0);
+    let t = "sxt.t".parse().unwrap();
+    let accessor = OwnedTableTestAccessor::<InnerProductProof>::new_from_table(t, data, 0, ());
     let ast = projection(
-        cols_expr_plan(t, &["b"], &accessor),
+        vec![AliasedDynProofExpr {
+            expr: DynProofExpr::Column(ColumnExpr::new(ColumnRef::new(
+                "PLACEHOLDER_SCHEMA.PLACEHOLDER_TABLE".parse().unwrap(),
+                "b".parse().unwrap(),
+                ColumnType::BigInt,
+            ))),
+            alias: "b".parse().unwrap(),
+        }],
         table_exec(
             t,
             vec![
