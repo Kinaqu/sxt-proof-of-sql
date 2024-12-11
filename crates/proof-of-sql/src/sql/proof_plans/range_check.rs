@@ -535,7 +535,7 @@ mod tests {
             .collect();
 
         let alloc = Bump::new();
-        let mut builder = FinalRoundBuilder::new(2, Vec::new());
+        let mut builder = FinalRoundBuilder::new(2, Vec::new(), Vec::new());
 
         get_logarithmic_derivative(
             &mut builder,
@@ -634,7 +634,7 @@ mod tests {
             .collect();
 
         let alloc = Bump::new();
-        let mut builder = FinalRoundBuilder::new(2, Vec::new());
+        let mut builder = FinalRoundBuilder::new(2, Vec::new(), Vec::new());
         get_logarithmic_derivative(
             &mut builder,
             &alloc,

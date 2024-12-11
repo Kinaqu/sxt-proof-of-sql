@@ -15,6 +15,8 @@ pub struct FinalRoundBuilder<'a, S: Scalar> {
     num_sumcheck_variables: usize,
     bit_distributions: Vec<BitDistribution>,
     commitment_descriptor: Vec<CommittableColumn<'a>>,
+    first_round_commitment_descriptor: Vec<CommittableColumn<'a>>,
+    consumed_first_round_commitment_descriptors: usize,
     pcs_proof_mles: Vec<Box<dyn MultilinearExtension<S> + 'a>>,
     sumcheck_subpolynomials: Vec<SumcheckSubpolynomial<'a, S>>,
     /// The challenges used in creation of the constraints in the proof.
@@ -28,11 +30,17 @@ pub struct FinalRoundBuilder<'a, S: Scalar> {
 }
 
 impl<'a, S: Scalar> FinalRoundBuilder<'a, S> {
-    pub fn new(num_sumcheck_variables: usize, post_result_challenges: Vec<S>) -> Self {
+    pub fn new(
+        num_sumcheck_variables: usize,
+        post_result_challenges: Vec<S>,
+        first_round_commitment_descriptor: Vec<CommittableColumn<'a>>,
+    ) -> Self {
         Self {
             num_sumcheck_variables,
             bit_distributions: Vec::new(),
             commitment_descriptor: Vec::new(),
+            first_round_commitment_descriptor,
+            consumed_first_round_commitment_descriptors: 0,
             pcs_proof_mles: Vec::new(),
             sumcheck_subpolynomials: Vec::new(),
             post_result_challenges,
@@ -45,6 +53,12 @@ impl<'a, S: Scalar> FinalRoundBuilder<'a, S> {
 
     pub fn num_sumcheck_subpolynomials(&self) -> usize {
         self.sumcheck_subpolynomials.len()
+    }
+
+    pub fn consume_first_round_mle(&mut self) -> CommittableColumn<'a> {
+        let index = self.consumed_first_round_commitment_descriptors;
+        self.consumed_first_round_commitment_descriptors += 1;
+        self.first_round_commitment_descriptor[index].clone()
     }
 
     pub fn pcs_proof_mles(&self) -> &[Box<dyn MultilinearExtension<S> + 'a>] {

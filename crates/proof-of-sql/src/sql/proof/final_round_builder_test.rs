@@ -17,7 +17,7 @@ use curve25519_dalek::RistrettoPoint;
 fn we_can_compute_commitments_for_intermediate_mles_using_a_zero_offset() {
     let mle1 = [1, 2];
     let mle2 = [10i64, 20];
-    let mut builder = FinalRoundBuilder::<Curve25519Scalar>::new(1, Vec::new());
+    let mut builder = FinalRoundBuilder::<Curve25519Scalar>::new(1, Vec::new(), Vec::new());
     builder.produce_anchored_mle(&mle1);
     builder.produce_intermediate_mle(&mle2[..]);
     let offset_generators = 0_usize;
@@ -36,7 +36,7 @@ fn we_can_compute_commitments_for_intermediate_mles_using_a_zero_offset() {
 fn we_can_compute_commitments_for_intermediate_mles_using_a_non_zero_offset() {
     let mle1 = [1, 2];
     let mle2 = [10i64, 20];
-    let mut builder = FinalRoundBuilder::<Curve25519Scalar>::new(1, Vec::new());
+    let mut builder = FinalRoundBuilder::<Curve25519Scalar>::new(1, Vec::new(), Vec::new());
     builder.produce_anchored_mle(&mle1);
     builder.produce_intermediate_mle(&mle2[..]);
     let offset_generators = 123_usize;
@@ -55,7 +55,7 @@ fn we_can_compute_commitments_for_intermediate_mles_using_a_non_zero_offset() {
 fn we_can_evaluate_pcs_proof_mles() {
     let mle1 = [1, 2];
     let mle2 = [10i64, 20];
-    let mut builder = FinalRoundBuilder::new(1, Vec::new());
+    let mut builder = FinalRoundBuilder::new(1, Vec::new(), Vec::new());
     builder.produce_anchored_mle(&mle1);
     builder.produce_intermediate_mle(&mle2[..]);
     let evaluation_vec = [
@@ -112,6 +112,7 @@ fn we_can_consume_post_result_challenges_in_proof_builder() {
             Curve25519Scalar::from(456),
             Curve25519Scalar::from(789),
         ],
+        Vec::new(),
     );
     assert_eq!(
         Curve25519Scalar::from(789),
@@ -124,5 +125,25 @@ fn we_can_consume_post_result_challenges_in_proof_builder() {
     assert_eq!(
         Curve25519Scalar::from(123),
         builder.consume_post_result_challenge()
+    );
+}
+
+#[test]
+fn we_can_consume_first_round_committable_columns() {
+    let mut builder: FinalRoundBuilder<Curve25519Scalar> = FinalRoundBuilder::new(
+        2,
+        Vec::new(),
+        vec![
+            CommittableColumn::TinyInt(&[2_i8, 3, 4]),
+            CommittableColumn::BigInt(&[5_i64, 6, 7]),
+        ],
+    );
+    assert_eq!(
+        CommittableColumn::TinyInt(&[2_i8, 3, 4]),
+        builder.consume_first_round_mle()
+    );
+    assert_eq!(
+        CommittableColumn::BigInt(&[5_i64, 6, 7]),
+        builder.consume_first_round_mle()
     );
 }

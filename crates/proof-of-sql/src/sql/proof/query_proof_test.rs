@@ -48,7 +48,7 @@ impl Default for TrivialTestProofPlan {
 impl ProverEvaluate for TrivialTestProofPlan {
     fn first_round_evaluate<'a, S: Scalar>(
         &self,
-        builder: &mut FirstRoundBuilder,
+        builder: &mut FirstRoundBuilder<'a, S>,
         alloc: &'a Bump,
         _table_map: &IndexMap<TableRef, Table<'a, S>>,
     ) -> Table<'a, S> {
@@ -263,7 +263,7 @@ impl Default for SquareTestProofPlan {
 impl ProverEvaluate for SquareTestProofPlan {
     fn first_round_evaluate<'a, S: Scalar>(
         &self,
-        builder: &mut FirstRoundBuilder,
+        builder: &mut FirstRoundBuilder<'a, S>,
         alloc: &'a Bump,
         _table_map: &IndexMap<TableRef, Table<'a, S>>,
     ) -> Table<'a, S> {
@@ -442,7 +442,7 @@ impl Default for DoubleSquareTestProofPlan {
 impl ProverEvaluate for DoubleSquareTestProofPlan {
     fn first_round_evaluate<'a, S: Scalar>(
         &self,
-        builder: &mut FirstRoundBuilder,
+        builder: &mut FirstRoundBuilder<'a, S>,
         alloc: &'a Bump,
         _table_map: &IndexMap<TableRef, Table<'a, S>>,
     ) -> Table<'a, S> {
@@ -600,7 +600,8 @@ fn verify_fails_if_an_intermediate_commitment_doesnt_match() {
         (),
     );
     let (mut proof, result) = QueryProof::<InnerProductProof>::new(&expr, &accessor, &());
-    proof.commitments[0] = proof.commitments[0] * Curve25519Scalar::from(2u64);
+    proof.final_round_commitments[0] =
+        proof.final_round_commitments[0] * Curve25519Scalar::from(2u64);
     assert!(proof.verify(&expr, &accessor, result, &()).is_err());
 }
 
@@ -652,7 +653,7 @@ struct ChallengeTestProofPlan {}
 impl ProverEvaluate for ChallengeTestProofPlan {
     fn first_round_evaluate<'a, S: Scalar>(
         &self,
-        builder: &mut FirstRoundBuilder,
+        builder: &mut FirstRoundBuilder<'a, S>,
         alloc: &'a Bump,
         _table_map: &IndexMap<TableRef, Table<'a, S>>,
     ) -> Table<'a, S> {
