@@ -1,13 +1,16 @@
 use super::{count_sign, prover_evaluate_sign, result_evaluate_sign, verifier_evaluate_sign};
 use crate::{
-    base::{bit::BitDistribution, polynomial::MultilinearExtension, scalar::Curve25519Scalar},
+    base::{
+        bit::BitDistribution,
+        polynomial::MultilinearExtension,
+        scalar::{Curve25519Scalar, Scalar},
+    },
     sql::proof::{
         CountBuilder, FinalRoundBuilder, SumcheckMleEvaluations, SumcheckRandomScalars,
         VerificationBuilder,
     },
 };
 use bumpalo::Bump;
-use num_traits::Zero;
 
 #[test]
 fn prover_evaluation_generates_the_bit_distribution_of_a_constant_column() {
@@ -77,7 +80,7 @@ fn we_can_verify_a_constant_decomposition() {
     );
     let data_eval = (&data).evaluate_at_point(&evaluation_point);
     let eval = verifier_evaluate_sign(&mut builder, data_eval, *one_eval).unwrap();
-    assert_eq!(eval, Curve25519Scalar::zero());
+    assert_eq!(eval, Curve25519Scalar::ONE);
 }
 
 #[test]

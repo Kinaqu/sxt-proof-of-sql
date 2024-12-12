@@ -23,7 +23,7 @@ impl BitDistribution {
                 .clone()
                 .fold((U256::MAX, U256::MAX), |acc, bit_mask| {
                     let bit_mask = if is_bit_mask_negative_representation(bit_mask) {
-                        !bit_mask
+                        bit_mask ^ (U256::MAX >> 1)
                     } else {
                         bit_mask
                     };

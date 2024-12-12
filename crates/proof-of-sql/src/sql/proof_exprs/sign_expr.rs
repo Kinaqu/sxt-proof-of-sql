@@ -160,8 +160,10 @@ fn verify_bit_decomposition<S: ScalarExt>(
 ) -> bool {
     let mut eval = expr_eval;
     let sign_eval = dist.sign_eval(bit_evals);
-    eval -= sign_eval * S::from_wrapping(dist.sign_mask() - dist.inverse_sign_mask())
-        + one_eval * S::from_wrapping(dist.inverse_sign_mask());
+    eval += one_eval
+        * (S::from_wrapping(U256::ONE << 255)
+            - ((S::ONE - sign_eval) * S::from_wrapping(dist.inverse_sign_mask())
+                + sign_eval * S::from_wrapping(dist.sign_mask())));
 
     dist.for_enumerated_vary_mask(|vary_index, bit_index: u8| {
         let mult = (U256::ONE << bit_index) ^ (U256::ONE << 255);
