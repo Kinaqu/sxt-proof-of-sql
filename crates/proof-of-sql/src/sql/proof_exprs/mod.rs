@@ -62,9 +62,9 @@ pub(crate) use numerical_util::{
 };
 
 mod equals_expr;
+pub(crate) use equals_expr::EqualsExpr;
 use equals_expr::{
     prover_evaluate_equals_zero, result_evaluate_equals_zero, verifier_evaluate_equals_zero,
-    EqualsExpr,
 };
 #[cfg(all(test, feature = "blitzar"))]
 mod equals_expr_test;
