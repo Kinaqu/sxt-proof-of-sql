@@ -1,5 +1,6 @@
 use super::bit_mask_utils::{is_bit_mask_negative_representation, make_bit_mask};
 use crate::base::scalar::{Scalar, ScalarExt};
+use ark_std::iterable::Iterable;
 use bit_iter::BitIter;
 use bnum::types::U256;
 use core::convert::Into;
@@ -82,12 +83,12 @@ impl BitDistribution {
     where
         F: FnMut(usize, u8),
     {
-        for i in 0..4 {
-            let bitset: u64 = self.vary_mask[i];
-            for (index, pos) in BitIter::from(bitset).enumerate() {
-                f(index, (i * 64 + pos).try_into().unwrap());
-            }
-        }
+        (0..4)
+            .flat_map(|i| BitIter::from(self.vary_mask[i]).iter().map(move |pos| (i * 64 + pos) as u8))
+            .enumerate()
+            .for_each(|(index, pos)| {
+                f(index, pos);
+            });
     }
 }
 
